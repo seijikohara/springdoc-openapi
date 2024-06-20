@@ -14,8 +14,8 @@
     "/search": {
       "get": {
         "tags": [
-          "hello-ap1",
-          "hello-ap2"
+          "hello-ap2",
+          "hello-ap1"
         ],
         "summary": "Gets all pets.",
         "description": "Gets all pets.",

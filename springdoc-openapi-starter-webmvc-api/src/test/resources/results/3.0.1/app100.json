@@ -14,8 +14,8 @@
     "/search": {
       "get": {
         "tags": [
-          "hello-ap1",
-          "hello-ap2"
+          "hello-ap2",
+          "hello-ap1"
         ],
         "operationId": "getAllPets",
         "parameters": [

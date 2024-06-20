@@ -8,8 +8,11 @@
   ],
   "tags": [
     {
-      "name": "Definition Second Tag full",
-      "description": "desc definition"
+      "name": "Fourth Tag Full",
+      "description": "desc",
+      "externalDocs": {
+        "description": "docs desc"
+      }
     },
     {
       "name": "Fifth Tag Full",
@@ -22,23 +25,20 @@
       "name": "Definition First Tag"
     },
     {
-      "name": "Fourth Tag Full",
-      "description": "desc",
-      "externalDocs": {
-        "description": "docs desc"
-      }
+      "name": "Definition Second Tag full",
+      "description": "desc definition"
     }
   ],
   "paths": {
     "/hello": {
       "get": {
         "tags": [
-          "Sixth Tag",
-          "Second Tag",
           "Example Tag",
+          "Second Tag",
           "Third Tag",
+          "Fourth Tag Full",
           "Fifth Tag Full",
-          "Fourth Tag Full"
+          "Sixth Tag"
         ],
         "operationId": "hello",
         "responses": {

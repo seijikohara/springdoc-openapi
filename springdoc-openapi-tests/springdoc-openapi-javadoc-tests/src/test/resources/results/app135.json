@@ -17,14 +17,14 @@
     }
   ],
   "paths": {
-    "/books": {
+    "/greeter/greeter2/books": {
       "get": {
         "tags": [
           "book-repository"
         ],
         "summary": "Find all list.",
         "description": "Find all list.",
-        "operationId": "findAll",
+        "operationId": "findAll_1",
         "responses": {
           "200": {
             "description": "the list",
@@ -44,6 +44,83 @@
                     "$ref": "#/components/schemas/Book"
                   }
                 }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/greeter/greeter2/books/{author}": {
+      "get": {
+        "tags": [
+          "book-repository"
+        ],
+        "summary": "Find by author list.",
+        "description": "Find by author list.",
+        "operationId": "findByAuthor",
+        "parameters": [
+          {
+            "name": "author",
+            "in": "path",
+            "description": "the author",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "the list",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books": {
+      "get": {
+        "tags": [
+          "book-repository"
+        ],
+        "summary": "Find all list.",
+        "description": "Find all list.",
+        "operationId": "findAll",
+        "responses": {
+          "200": {
+            "description": "the list",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
               }
             }
           }
@@ -57,7 +134,7 @@
         ],
         "summary": "Find by author list.",
         "description": "Find by author list.",
-        "operationId": "findByAuthor",
+        "operationId": "findByAuthor_1",
         "parameters": [
           {
             "name": "author",
@@ -101,7 +178,7 @@
         ],
         "summary": "Find all list.",
         "description": "Find all list.",
-        "operationId": "findAll_1_3",
+        "operationId": "findAll_2_1",
         "responses": {
           "200": {
             "description": "the list",
@@ -142,84 +219,7 @@
         ],
         "summary": "Find by author list.",
         "description": "Find by author list.",
-        "operationId": "findByAuthor_3",
-        "parameters": [
-          {
-            "name": "author",
-            "in": "path",
-            "description": "the author",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "the list",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Book"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/greeter/greeter2/books": {
-      "get": {
-        "tags": [
-          "book-repository"
-        ],
-        "summary": "Find all list.",
-        "description": "Find all list.",
-        "operationId": "findAll_1_1",
-        "responses": {
-          "200": {
-            "description": "the list",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Book"
-                  }
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Book"
-                  }
-                }
-              },
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Book"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/greeter/greeter2/books/{author}": {
-      "get": {
-        "tags": [
-          "book-repository"
-        ],
-        "summary": "Find by author list.",
-        "description": "Find by author list.",
-        "operationId": "findByAuthor_1",
+        "operationId": "findByAuthor_2",
         "parameters": [
           {
             "name": "author",
@@ -255,7 +255,7 @@
         ],
         "summary": "Find all list.",
         "description": "Find all list.",
-        "operationId": "findAll_1_4",
+        "operationId": "findAll_2_2",
         "responses": {
           "200": {
             "description": "the list",
@@ -296,7 +296,7 @@
         ],
         "summary": "Find by author list.",
         "description": "Find by author list.",
-        "operationId": "findByAuthor_4",
+        "operationId": "findByAuthor_3",
         "parameters": [
           {
             "name": "author",
@@ -332,7 +332,7 @@
         ],
         "summary": "Find all list.",
         "description": "Find all list.",
-        "operationId": "findAll_1_2",
+        "operationId": "findAll_2_3",
         "responses": {
           "200": {
             "description": "the list",
@@ -373,7 +373,7 @@
         ],
         "summary": "Find by author list.",
         "description": "Find by author list.",
-        "operationId": "findByAuthor_2",
+        "operationId": "findByAuthor_4",
         "parameters": [
           {
             "name": "author",
@@ -408,10 +408,6 @@
       "Book": {
         "type": "object",
         "properties": {
-          "author": {
-            "type": "string",
-            "description": "The Author."
-          },
           "id": {
             "type": "string",
             "description": "The Id."
@@ -419,6 +415,10 @@
           "title": {
             "type": "string",
             "description": "The Title."
+          },
+          "author": {
+            "type": "string",
+            "description": "The Author."
           }
         },
         "description": "The type Book."
