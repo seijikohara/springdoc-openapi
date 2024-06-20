@@ -36,9 +36,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -100,6 +100,7 @@ import org.springdoc.core.service.GenericParameterService;
 import org.springdoc.core.service.GenericResponseService;
 import org.springdoc.core.service.OpenAPIService;
 import org.springdoc.core.service.OperationService;
+import org.springdoc.core.utils.CollectorUtils;
 import org.springdoc.core.utils.SpringDocUtils;
 
 import org.springframework.aop.support.AopUtils;
@@ -269,7 +270,7 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 	 * @param classes the classes
 	 */
 	public static void addHiddenRestControllers(String... classes) {
-		Set<Class<?>> hiddenClasses = new HashSet<>();
+		Set<Class<?>> hiddenClasses = new LinkedHashSet<>();
 		for (String aClass : classes) {
 			try {
 				hiddenClasses.add(Class.forName(aClass));
@@ -338,7 +339,7 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 						.filter(controller -> (AnnotationUtils.findAnnotation(controller.getValue().getClass(),
 								Hidden.class) == null))
 						.filter(controller -> !isHiddenRestControllers(controller.getValue().getClass()))
-						.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a1, a2) -> a1));
+						.collect(CollectorUtils.toLinkedHashMap(Map.Entry::getKey, Map.Entry::getValue, CollectorUtils::keepExisting));
 
 				Map<String, Object> findControllerAdvice = openAPIService.getControllerAdviceMap();
 				if (OpenApiVersion.OPENAPI_3_1 == springDocConfigProperties.getApiDocs().getVersion()){
@@ -865,7 +866,7 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 	 */
 	protected Set<RequestMethod> getDefaultAllowedHttpMethods() {
 		RequestMethod[] allowedRequestMethods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.DELETE, RequestMethod.OPTIONS, RequestMethod.HEAD };
-		return new HashSet<>(Arrays.asList(allowedRequestMethods));
+		return new LinkedHashSet<>(Arrays.asList(allowedRequestMethods));
 	}
 
 	/**

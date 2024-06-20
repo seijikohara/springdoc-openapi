@@ -27,7 +27,6 @@ package org.springdoc.webflux.api;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springdoc.api.OpenApiResourceNotFoundException;
 import org.springdoc.core.customizers.SpringDocCustomizers;
@@ -40,6 +39,7 @@ import org.springdoc.core.service.GenericResponseService;
 import org.springdoc.core.service.OpenAPIService;
 import org.springdoc.core.service.OperationService;
 
+import org.springdoc.core.utils.CollectorUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectFactory;
 
@@ -135,15 +135,13 @@ public abstract class MultipleOpenApiResource implements InitializingBean {
 		);
 
 		this.groupedOpenApiResources = groupedOpenApis.stream()
-				.collect(Collectors.toMap(GroupedOpenApi::getGroup, item ->
+				.collect(CollectorUtils.toLinkedHashMap(GroupedOpenApi::getGroup, item ->
 						{
 							GroupConfig groupConfig = new GroupConfig(item.getGroup(), item.getPathsToMatch(), item.getPackagesToScan(), item.getPackagesToExclude(), item.getPathsToExclude(), item.getProducesToMatch(), item.getConsumesToMatch(), item.getHeadersToMatch(), item.getDisplayName());
 							springDocConfigProperties.addGroupConfig(groupConfig);
 							return buildWebFluxOpenApiResource(item);
 						},
-						(existingValue, newValue) -> {
-							return existingValue; // choice to keep the existing value
-						}
+						CollectorUtils::keepExisting
 				));
 	}
 

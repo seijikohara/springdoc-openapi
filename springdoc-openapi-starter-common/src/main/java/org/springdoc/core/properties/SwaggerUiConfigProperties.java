@@ -25,10 +25,10 @@
 package org.springdoc.core.properties;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springdoc.core.configuration.SpringDocConfiguration;
+import org.springdoc.core.utils.CollectorUtils;
 import org.springdoc.core.utils.Constants;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -205,7 +205,7 @@ public class SwaggerUiConfigProperties extends AbstractSwaggerUiConfigProperties
 	 * @return the set
 	 */
 	public Set<SwaggerUrl> cloneUrls() {
-		return this.urls.stream().map(swaggerUrl -> new SwaggerUrl(swaggerUrl.getName(), swaggerUrl.getUrl(), swaggerUrl.getDisplayName())).collect(Collectors.toSet());
+		return this.urls.stream().map(swaggerUrl -> new SwaggerUrl(swaggerUrl.getName(), swaggerUrl.getUrl(), swaggerUrl.getDisplayName())).collect(CollectorUtils.toLinkedHashSet());
 	}
 
 	/**

@@ -26,12 +26,11 @@ package org.springdoc.core.models;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.models.responses.ApiResponse;
@@ -40,6 +39,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
+import org.springdoc.core.utils.CollectorUtils;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -306,7 +306,7 @@ public class MethodAttributes {
 	 * @return the string [ ]
 	 */
     private String[] mergeArrays(@Nullable String[] array1, String[] array2) {
-        Set<String> uniqueValues = array1 == null ? new HashSet<>() : Arrays.stream(array1).collect(Collectors.toSet());
+        Set<String> uniqueValues = array1 == null ? new LinkedHashSet<>() : Arrays.stream(array1).collect(CollectorUtils.toLinkedHashSet());
         uniqueValues.addAll(Arrays.asList(array2));
         return uniqueValues.toArray(new String[0]);
     }

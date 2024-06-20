@@ -24,16 +24,15 @@
 package org.springdoc.webflux.core.providers;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.SpringWebProvider;
 
+import org.springdoc.core.utils.CollectorUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.reactive.result.condition.PatternsRequestCondition;
@@ -81,7 +80,7 @@ public class SpringWebFluxProvider extends SpringWebProvider {
 		RequestMappingInfo requestMappingInfo = (RequestMappingInfo) requestMapping;
 		PatternsRequestCondition patternsRequestCondition = requestMappingInfo.getPatternsCondition();
 		return patternsRequestCondition.getPatterns().stream()
-				.map(PathPattern::getPatternString).collect(Collectors.toSet());
+				.map(PathPattern::getPatternString).collect(CollectorUtils.toLinkedHashSet());
 	}
 
 
@@ -98,7 +97,7 @@ public class SpringWebFluxProvider extends SpringWebProvider {
 					.map(AbstractHandlerMethodMapping::getHandlerMethods)
 					.map(Map::entrySet)
 					.flatMap(Collection::stream)
-					.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (a1, a2) -> a1, LinkedHashMap::new));
+					.collect(CollectorUtils.toLinkedHashMap(Entry::getKey, Entry::getValue, CollectorUtils::keepExisting));
 		}
 		return this.handlerMethods;
 	}

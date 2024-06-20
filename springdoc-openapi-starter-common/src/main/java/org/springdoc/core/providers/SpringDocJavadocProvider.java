@@ -28,7 +28,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.github.therapi.runtimejavadoc.ClassJavadoc;
 import com.github.therapi.runtimejavadoc.CommentFormatter;
@@ -38,9 +37,9 @@ import com.github.therapi.runtimejavadoc.ParamJavadoc;
 import com.github.therapi.runtimejavadoc.RuntimeJavadoc;
 import com.github.therapi.runtimejavadoc.ThrowsJavadoc;
 import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.CollectorUtils;
 
 import static java.lang.Math.min;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * The type Spring doc javadoc provider.
@@ -76,7 +75,7 @@ public class SpringDocJavadocProvider implements JavadocProvider {
 	public Map<String, String> getRecordClassParamJavadoc(Class<?> cl) {
 		ClassJavadoc classJavadoc = RuntimeJavadoc.getJavadoc(cl);
 		return classJavadoc.getRecordComponents().stream()
-				.collect(Collectors.toMap(ParamJavadoc::getName, recordClass -> formatter.format(recordClass.getComment())));
+				.collect(CollectorUtils.toLinkedHashMap(ParamJavadoc::getName, recordClass -> formatter.format(recordClass.getComment())));
 	}
 
 	/**
@@ -113,7 +112,7 @@ public class SpringDocJavadocProvider implements JavadocProvider {
 		return RuntimeJavadoc.getJavadoc(method)
 				.getThrows()
 				.stream()
-				.collect(toMap(ThrowsJavadoc::getName, javadoc -> formatter.format(javadoc.getComment())));
+				.collect(CollectorUtils.toLinkedHashMap(ThrowsJavadoc::getName, javadoc -> formatter.format(javadoc.getComment())));
 	}
 
 	/**

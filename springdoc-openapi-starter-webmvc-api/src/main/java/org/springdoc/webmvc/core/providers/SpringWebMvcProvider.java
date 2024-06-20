@@ -24,16 +24,15 @@
 package org.springdoc.webmvc.core.providers;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.SpringWebProvider;
 
+import org.springdoc.core.utils.CollectorUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.AbstractHandlerMethodMapping;
@@ -104,7 +103,7 @@ public class SpringWebMvcProvider extends SpringWebProvider {
 					.map(AbstractHandlerMethodMapping::getHandlerMethods)
 					.map(Map::entrySet)
 					.flatMap(Collection::stream)
-					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a1, a2) -> a1, LinkedHashMap::new));
+					.collect(CollectorUtils.toLinkedHashMap(Map.Entry::getKey, Map.Entry::getValue, CollectorUtils::keepExisting));
 		}
 		return this.handlerMethods;
 	}

@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import io.swagger.v3.core.util.PathUtils;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -42,6 +41,7 @@ import org.springdoc.core.models.MethodAttributes;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.DataRestHalProvider;
 
+import org.springdoc.core.utils.CollectorUtils;
 import org.springframework.data.rest.core.Path;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.mapping.HttpMethods;
@@ -175,7 +175,7 @@ public class DataRestRouterOperationService {
 		if (andCheck(resourceMetadata != null, !controllerType.equals(ControllerType.SEARCH))) {
 			HttpMethods httpMethodsItem = resourceMetadata.getSupportedHttpMethods().getMethodsFor(ResourceType.ITEM);
 			requestMethodsItem = requestMethods.stream().filter(requestMethod -> httpMethodsItem.contains(HttpMethod.valueOf(requestMethod.toString())))
-					.collect(Collectors.toSet());
+					.collect(CollectorUtils.toLinkedHashSet());
 
 			buildRouterOperation(routerOperationList, resourceMetadata, dataRestRepository, openAPI, path,
 					subPath, controllerType, methodResourceMapping, requestMappingInfo, handlerMethod, requestMethodsItem, ResourceType.ITEM);
@@ -183,7 +183,7 @@ public class DataRestRouterOperationService {
 			if (!ControllerType.PROPERTY.equals(controllerType)) {
 				HttpMethods httpMethodsCollection = resourceMetadata.getSupportedHttpMethods().getMethodsFor(ResourceType.COLLECTION);
 				requestMethodsCollection = requestMethods.stream().filter(requestMethod -> httpMethodsCollection.contains(HttpMethod.valueOf(requestMethod.toString())))
-						.collect(Collectors.toSet());
+						.collect(CollectorUtils.toLinkedHashSet());
 
 				buildRouterOperation(routerOperationList, resourceMetadata, dataRestRepository, openAPI, path,
 						subPath, controllerType, methodResourceMapping, requestMappingInfo, handlerMethod, requestMethodsCollection, ResourceType.COLLECTION);

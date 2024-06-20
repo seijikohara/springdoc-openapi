@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,6 +41,7 @@ import org.springdoc.core.data.ControllerType;
 import org.springdoc.core.data.DataRestRepository;
 import org.springdoc.core.data.DataRestRouterOperationService;
 import org.springdoc.core.fn.RouterOperation;
+import org.springdoc.core.utils.CollectorUtils;
 import org.springdoc.core.utils.SpringDocDataRestUtils;
 
 import org.springframework.context.ApplicationContext;
@@ -232,14 +232,14 @@ public class SpringRepositoryRestResourceProvider implements RepositoryRestResou
 							Map<RequestMappingInfo, HandlerMethod> handlerMethodMapFiltered = handlerMethodMap.entrySet().stream()
 									.filter(requestMappingInfoHandlerMethodEntry -> REPOSITORY_ENTITY_CONTROLLER.equals(requestMappingInfoHandlerMethodEntry
 											.getValue().getBeanType().getName()))
-									.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a1, a2) -> a1));
+									.collect(CollectorUtils.toLinkedHashMap(Map.Entry::getKey, Map.Entry::getValue, CollectorUtils::keepExisting));
 							dataRestRepository.setControllerType(ControllerType.ENTITY);
 							findControllers(routerOperationList, handlerMethodMapFiltered, resourceMetadata, dataRestRepository, openAPI);
 
 							Map<RequestMappingInfo, HandlerMethod> handlerMethodMapFilteredMethodMap = handlerMethodMap.entrySet().stream()
 									.filter(requestMappingInfoHandlerMethodEntry -> REPOSITORY_PROPERTY_CONTROLLER.equals(requestMappingInfoHandlerMethodEntry
 											.getValue().getBeanType().getName()))
-									.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a1, a2) -> a1));
+									.collect(CollectorUtils.toLinkedHashMap(Map.Entry::getKey, Map.Entry::getValue, CollectorUtils::keepExisting));
 
 							entity.doWithAssociations((SimpleAssociationHandler) association -> {
 								PersistentProperty<?> property = association.getInverse();
@@ -259,14 +259,14 @@ public class SpringRepositoryRestResourceProvider implements RepositoryRestResou
 							Map<RequestMappingInfo, HandlerMethod> handlerMethodMapFiltered = handlerMethodMap.entrySet().stream()
 									.filter(requestMappingInfoHandlerMethodEntry -> REPOSITORY_SCHEMA_CONTROLLER.equals(requestMappingInfoHandlerMethodEntry
 											.getValue().getBeanType().getName()))
-									.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a1, a2) -> a1));
+									.collect(CollectorUtils.toLinkedHashMap(Map.Entry::getKey, Map.Entry::getValue, CollectorUtils::keepExisting));
 							dataRestRepository.setControllerType(ControllerType.SCHEMA);
 							findControllers(routerOperationList, handlerMethodMapFiltered, resourceMetadata, dataRestRepository, openAPI);
 							handlerMethodMapFiltered = handlerMethodMap.entrySet().stream()
 									.filter(requestMappingInfoHandlerMethodEntry -> ProfileController.class.equals(requestMappingInfoHandlerMethodEntry
 											.getValue().getBeanType()) || AlpsController.class.equals(requestMappingInfoHandlerMethodEntry
 											.getValue().getBeanType()))
-									.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a1, a2) -> a1));
+									.collect(CollectorUtils.toLinkedHashMap(Map.Entry::getKey, Map.Entry::getValue, CollectorUtils::keepExisting));
 							dataRestRepository.setControllerType(ControllerType.GENERAL);
 							findControllers(routerOperationList, handlerMethodMapFiltered, resourceMetadata, dataRestRepository, openAPI);
 						}
@@ -301,7 +301,7 @@ public class SpringRepositoryRestResourceProvider implements RepositoryRestResou
 				.flatMap(
 						handler -> ((RequestMappingInfoHandlerMapping) handler).getHandlerMethods().entrySet().stream())
 				.filter(entry -> !entry.getValue().getBeanType().getName().startsWith(SPRING_DATA_REST_PACKAGE) && AnnotatedElementUtils.hasAnnotation(entry.getValue().getBeanType(), BasePathAwareController.class))
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+				.collect(CollectorUtils.toLinkedHashMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	/**
@@ -354,7 +354,7 @@ public class SpringRepositoryRestResourceProvider implements RepositoryRestResou
 				Map<RequestMappingInfo, HandlerMethod> handlerMethodMapFiltered = handlerMethodMap.entrySet().stream()
 						.filter(requestMappingInfoHandlerMethodEntry -> REPOSITORY_SEARCH_CONTROLLER.equals(requestMappingInfoHandlerMethodEntry
 								.getValue().getBeanType().getName()))
-						.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a1, a2) -> a1));
+						.collect(CollectorUtils.toLinkedHashMap(Map.Entry::getKey, Map.Entry::getValue, CollectorUtils::keepExisting));
 				ResourceMetadata metadata = associations.getMetadataFor(dataRestRepository.getDomainType());
 				if(metadata!=null && metadata.isExported()) {
 					SearchResourceMappings searchResourceMappings = metadata.getSearchResourceMappings();

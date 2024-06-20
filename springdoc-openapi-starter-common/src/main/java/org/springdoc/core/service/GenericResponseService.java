@@ -32,8 +32,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -67,6 +67,7 @@ import org.springdoc.core.parsers.ReturnTypeParser;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.JavadocProvider;
 import org.springdoc.core.providers.ObjectMapperProvider;
+import org.springdoc.core.utils.CollectorUtils;
 import org.springdoc.core.utils.PropertyResolverUtils;
 import org.springdoc.core.utils.SpringDocAnnotationsUtils;
 
@@ -484,12 +485,12 @@ public class GenericResponseService {
 		Set<io.swagger.v3.oas.annotations.responses.ApiResponses> apiResponsesDoc = AnnotatedElementUtils
 				.findAllMergedAnnotations(method, io.swagger.v3.oas.annotations.responses.ApiResponses.class);
 		Set<io.swagger.v3.oas.annotations.responses.ApiResponse> responses = apiResponsesDoc.stream()
-				.flatMap(x -> Stream.of(x.value())).collect(Collectors.toSet());
+				.flatMap(x -> Stream.of(x.value())).collect(CollectorUtils.toLinkedHashSet());
 
 		Set<io.swagger.v3.oas.annotations.responses.ApiResponses> apiResponsesDocDeclaringClass = AnnotatedElementUtils
 				.findAllMergedAnnotations(declaringClass, io.swagger.v3.oas.annotations.responses.ApiResponses.class);
 		responses.addAll(
-				apiResponsesDocDeclaringClass.stream().flatMap(x -> Stream.of(x.value())).collect(Collectors.toSet()));
+				apiResponsesDocDeclaringClass.stream().flatMap(x -> Stream.of(x.value())).collect(CollectorUtils.toLinkedHashSet()));
 
 		Set<io.swagger.v3.oas.annotations.responses.ApiResponse> apiResponseDoc = AnnotatedElementUtils
 				.findMergedRepeatableAnnotations(method, io.swagger.v3.oas.annotations.responses.ApiResponse.class);
@@ -769,7 +770,7 @@ public class GenericResponseService {
 				final io.swagger.v3.oas.annotations.Operation apiOperation = AnnotatedElementUtils.findMergedAnnotation(method,
 						io.swagger.v3.oas.annotations.Operation.class);
 				if (apiOperation != null) {
-					responseSet = new HashSet<>(Arrays.asList(apiOperation.responses()));
+					responseSet = new LinkedHashSet<>(Arrays.asList(apiOperation.responses()));
 					if (isHttpCodePresent(httpCode, responseSet))
 						result = true;
 				}
@@ -799,7 +800,7 @@ public class GenericResponseService {
 	 */
 	private Set<Class<?>> getExceptionsFromExceptionHandler(MethodParameter methodParameter) {
 		ExceptionHandler exceptionHandler = methodParameter.getExecutable().getAnnotation(ExceptionHandler.class);
-		Set<Class<?>> exceptions = new HashSet<>();
+		Set<Class<?>> exceptions = new LinkedHashSet<>();
 		if (exceptionHandler != null) {
 			if (exceptionHandler.value().length == 0) {
 				for (Parameter parameter : methodParameter.getExecutable().getParameters()) {

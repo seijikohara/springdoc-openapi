@@ -27,16 +27,15 @@ package org.springdoc.core.properties;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springdoc.core.configuration.SpringDocConfiguration;
+import org.springdoc.core.utils.CollectorUtils;
 import org.springdoc.core.utils.Constants;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -177,7 +176,7 @@ public class SwaggerUiConfigParameters extends AbstractSwaggerUiConfigProperties
 		this.showExtensions = swaggerUiConfig.getShowExtensions();
 		this.supportedSubmitMethods = swaggerUiConfig.getSupportedSubmitMethods();
 		this.url = swaggerUiConfig.getUrl();
-		this.urls = swaggerUiConfig.getUrls() == null ? new HashSet<>() : swaggerUiConfig.cloneUrls();
+		this.urls = swaggerUiConfig.getUrls() == null ? new LinkedHashSet<>() : swaggerUiConfig.cloneUrls();
 		this.urlsPrimaryName = swaggerUiConfig.getUrlsPrimaryName();
 		this.groupsOrder = swaggerUiConfig.getGroupsOrder();
 		this.tryItOutEnabled = swaggerUiConfig.getTryItOutEnabled();
@@ -308,7 +307,7 @@ public class SwaggerUiConfigParameters extends AbstractSwaggerUiConfigProperties
 		else
 			swaggerUrlComparator = (h1, h2) -> h2.getDisplayName().compareTo(h1.getDisplayName());
 
-		swaggerUrls = swaggerUrls.stream().sorted(swaggerUrlComparator).filter(elt -> StringUtils.isNotEmpty(elt.getUrl())).collect(Collectors.toCollection(LinkedHashSet::new));
+		swaggerUrls = swaggerUrls.stream().sorted(swaggerUrlComparator).filter(elt -> StringUtils.isNotEmpty(elt.getUrl())).collect(CollectorUtils.toLinkedHashSet());
 		if (!CollectionUtils.isEmpty(swaggerUrls)) {
 			params.put(urls, swaggerUrls);
 		}

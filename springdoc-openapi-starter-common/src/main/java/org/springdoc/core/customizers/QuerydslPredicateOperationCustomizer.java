@@ -30,11 +30,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.querydsl.core.types.Path;
 import io.swagger.v3.core.converter.ModelConverters;
@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 
+import org.springdoc.core.utils.CollectorUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
@@ -109,7 +110,7 @@ public class QuerydslPredicateOperationCustomizer implements GlobalOperationCust
 
 			QuerydslBindings bindings = extractQdslBindings(predicate);
 
-			Set<String> fieldsToAdd = Arrays.stream(predicate.root().getDeclaredFields()).filter(field -> !Modifier.isStatic(field.getModifiers())).map(Field::getName).collect(Collectors.toSet());
+			Set<String> fieldsToAdd = Arrays.stream(predicate.root().getDeclaredFields()).filter(field -> !Modifier.isStatic(field.getModifiers())).map(Field::getName).collect(CollectorUtils.toLinkedHashSet());
 
 			Map<String, Object> pathSpecMap = getPathSpec(bindings, "pathSpecs");
 			//remove blacklisted fields
